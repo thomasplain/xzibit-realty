@@ -4,6 +4,7 @@ import json
 import re
 import datetime
 import os
+import trademetools
 
 suburbs_we_like = [ \
 	'Balmoral', \
@@ -25,18 +26,13 @@ suburbs_we_like = [ \
 	'St Lukes'
 ]
 
-localities_url = "http://api.trademe.co.nz/v1/Localities.json"
-
-localities_dict = json.loads(urllib2.urlopen(localities_url).read())
-
-regions_list = localities_dict[1]
-auckland_dict = regions_list['Districts'][0]
+localities_dict = trademetools.LocalitiesList()
 
 suburb_id_list = []
 
-for suburb in auckland_dict['Suburbs']:
-	if suburb['Name'] in suburbs_we_like:
-		suburb_id_list.append(str(suburb['SuburbId']))
+for suburb in suburbs_we_like:
+	suburb_id = str(localities_dict.get_suburb_id(suburb))
+	suburb_id_list.append(suburb_id)
 
 suburbs_string = "suburb=" + "%2C".join(suburb_id_list)
 
